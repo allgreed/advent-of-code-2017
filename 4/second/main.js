@@ -12,7 +12,7 @@ const isAnagramOf = (firstWord, secondWord) =>
     secondWord = secondWord.split("")
 
     if (firstWord.length !== secondWord.length)
-        return false;
+        return false
 
     const removeFrom = arr => value =>
     {
@@ -31,17 +31,11 @@ const isAnagramOf = (firstWord, secondWord) =>
 
 const isLineValid = arr =>
 {
-    // todo: redo this in functional style
-    while (arr.length !== 0)
-    {
-        const comparedWord = arr.shift()
+    for (const comparedWord = arr.shift(); comparedWord !== undefined; comparedWord = arr.shift())
+        if (!arr.every(element => !(isAnagramOf(element, comparedWord))))
+            return false
 
-        for (element of arr)
-            if (isAnagramOf(element, comparedWord))
-               return false; 
-    }
-
-    return true;
+    return true
 }
 
 const result = data.map(line => isLineValid(line)).reduce((a, b) => a + b)
