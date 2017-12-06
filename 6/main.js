@@ -1,45 +1,25 @@
 #!/usr/bin/env node
 
 const filename = "input"
-//const filename = "test"
 
-//todo: refactor like SHIIIIT!!!!
+const range = (end, start = 0) => [...Array(end).keys()].map(x => x + start)
 
-const data = require("fs").readFileSync(`${ filename }.txt`, 'utf-8')
+const memory = require("fs").readFileSync(`${ filename }.txt`, 'utf-8')
     .split(" ")
     .filter(x => x != "" && x != "\n")
     .map(string => Number(string))
 
-const mem = [...data]
-let counter = 0
-const states = []
+const history = []
 
-const aaa = (function()
+while(!history.includes(memory.toString()))
 {
-while(true)
-{
-    const bankToRedistribute = mem.indexOf(Math.max(...mem))
-    let blocksToRedistribute = mem[bankToRedistribute]
-    mem[bankToRedistribute] = 0
+    history.push(memory.toString())
 
-    let index = bankToRedistribute + 1
-    while(blocksToRedistribute)
-    {
-        index %= mem.length
-        mem[index]++
-        index++
-        blocksToRedistribute--
-    }
-
-    counter++
-
-    const serializedState = mem.toString()
-    if (states.includes(serializedState))
-        return states.indexOf(serializedState)
-    else
-        states.push(serializedState)
+    const bankToRedistribute = memory.indexOf(Math.max(...memory))
+    const blocksToRedistribute = ([, memory[bankToRedistribute]] = [memory[bankToRedistribute], 0])[0]
+    range(blocksToRedistribute, bankToRedistribute).forEach(index => memory[index = ++index % memory.length]++)
 }
-})()
 
-console.log(counter)
-console.log(counter - aaa - 1)
+console.log(history.length)
+console.log(history.length - history.indexOf(memory.toString()))
+
